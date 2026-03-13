@@ -61,4 +61,5 @@ Approx 3-4 hours.
 - Actionable Pagination
 - UI Improvements: Dashboard, Task details.
 - Actual API Intergation
+- End Session on Signout
 - Doxygen-style Documentation
