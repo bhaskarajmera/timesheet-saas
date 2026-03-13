@@ -8,31 +8,32 @@ import {
     getSortedRowModel,
     flexRender
 } from "@tanstack/react-table"
-
 import { useState } from "react"
 import { timesheets } from "@/data/timesheets"
 import { twMerge } from "tailwind-merge"
+import { useRouter } from "next/navigation"
+import TimesheetDetail from "./TimesheetDetail"
 
 export default function TimesheetDataTable() {
     const [data] = useState([...timesheets])
     const [statusFilter, setStatusFilter] = useState("")
     const [sorting, setSorting] = useState([])
+    const [expandedRow, setExpandedRow] = useState(null) // Track expanded row
+
+    const router = useRouter()
 
     const columns = [
         {
-            header: ({ column }) => {
-                return (
-                    <button
-                        className="cursor-pointer"
-                        variant="ghost"
-                        onClick={() =>
-                            column.toggleSorting(column.getIsSorted() === "asc")
-                        }
-                    >
-                        Week # ↕
-                    </button>
-                )
-            },
+            header: ({ column }) => (
+                <button
+                    className="cursor-pointer"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Week # ↕
+                </button>
+            ),
             accessorKey: "week"
         },
         {
@@ -40,19 +41,16 @@ export default function TimesheetDataTable() {
             accessorKey: "date"
         },
         {
-            header: ({ column }) => {
-                return (
-                    <button
-                        className="cursor-pointer"
-                        variant="ghost"
-                        onClick={() =>
-                            column.toggleSorting(column.getIsSorted() === "asc")
-                        }
-                    >
-                        Status ↕
-                    </button>
-                )
-            },
+            header: ({ column }) => (
+                <button
+                    className="cursor-pointer"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Status ↕
+                </button>
+            ),
             accessorKey: "status",
             cell: (info) => (
                 <span
@@ -67,8 +65,13 @@ export default function TimesheetDataTable() {
         },
         {
             header: "Actions",
-            cell: () => (
-                <button className="text-blue-600 hover:underline cursor-pointer">
+            cell: ({ row }) => (
+                <button
+                    className="text-blue-600 hover:underline cursor-pointer"
+                    onClick={() =>
+                        router.push(`/dashboard/timesheet-${row.original.id}`)
+                    }
+                >
                     View
                 </button>
             )
@@ -97,8 +100,6 @@ export default function TimesheetDataTable() {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-300">
                 <h2 className="font-semibold">Your Timesheets</h2>
-
-                {/* Status Filter */}
                 <select
                     className="border border-gray-300 rounded p-2 text-sm cursor-pointer"
                     value={statusFilter}
@@ -119,7 +120,7 @@ export default function TimesheetDataTable() {
                             {headerGroup.headers.map((header) => (
                                 <th
                                     key={header.id}
-                                    className="p-3 text-left  text-gray-600"
+                                    className="p-3 text-left text-gray-600"
                                 >
                                     {flexRender(
                                         header.column.columnDef.header,
@@ -134,7 +135,6 @@ export default function TimesheetDataTable() {
                 <tbody>
                     {table.getRowModel().rows.map((row) => (
                         <tr key={row.id} className="border-t border-gray-300">
-                            {console.log()}
                             {row.getVisibleCells().map((cell) => (
                                 <td key={cell.id} className={"p-3"}>
                                     {flexRender(
@@ -145,14 +145,21 @@ export default function TimesheetDataTable() {
                             ))}
                         </tr>
                     ))}
+                    {/* Render TimesheetDetail if a row is expanded */}
+                    {expandedRow && (
+                        <tr className="bg-gray-50 border-t border-gray-300">
+                            <td colSpan={columns.length} className="p-4">
+                                <TimesheetDetail />
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
 
             {/* Pagination */}
             <div className="flex items-center justify-between p-4 border-t border-gray-300">
-                {/* Rows per page */}
                 <select
-                    className="border  border-gray-300 rounded p-2 text-sm cursor-pointer"
+                    className="border border-gray-300 rounded p-2 text-sm cursor-pointer"
                     value={table.getState().pagination.pageSize}
                     onChange={(e) => table.setPageSize(Number(e.target.value))}
                 >
@@ -163,7 +170,6 @@ export default function TimesheetDataTable() {
                     ))}
                 </select>
 
-                {/* Page controls */}
                 <div className="flex gap-2">
                     <button
                         className="px-3 py-1 border border-gray-300 rounded cursor-pointer"
