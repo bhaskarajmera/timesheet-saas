@@ -62,4 +62,5 @@ Approx 3-4 hours.
 - UI Improvements: Dashboard, Task details.
 - Actual API Intergation
 - End Session on Signout
+- Middleware to Support Auth URL's
 - Doxygen-style Documentation
