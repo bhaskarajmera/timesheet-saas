@@ -18,6 +18,7 @@ A simple SaaS-style Timesheet Management App built using Next.js.
 - Internal API routes
 - Modular reusable components
 - Responsive layout
+- End Session on Signout
 
 ## Steps for Setup
 
@@ -57,10 +58,9 @@ Approx 3-4 hours.
 
 ## Next Actions:
 
-- Integrate Task Details Page & Add New Task Functionality
+- Task Details Page: Add New Task Functionality
 - Actionable Pagination
 - UI Improvements: Dashboard, Task details.
 - Actual API Intergation
-- End Session on Signout
 - Middleware to Support Auth URL's
 - Doxygen-style Documentation
