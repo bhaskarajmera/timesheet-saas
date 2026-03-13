@@ -20,6 +20,10 @@ A simple SaaS-style Timesheet Management App built using Next.js.
 - Responsive layout
 - End Session on Signout
 
+## Deployed
+
+https://timesheet-saas.vercel.app
+
 ## Steps for Setup
 
 1. Clone repo
